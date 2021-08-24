@@ -1,6 +1,5 @@
 package cn.indi.lyl.spider;
 
-import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.codecraft.webmagic.Page;
@@ -12,8 +11,8 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import java.util.*;
 
 // get data from boohee
-public class DemoProcessor implements PageProcessor {
-    private Logger logger = LoggerFactory.getLogger(DemoProcessor.class);
+public class BooheeProcessor implements PageProcessor {
+    private Logger logger = LoggerFactory.getLogger(BooheeProcessor.class);
     // 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(100);
 
@@ -62,7 +61,7 @@ public class DemoProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        Spider.create(new DemoProcessor())
+        Spider.create(new BooheeProcessor())
                 //从"https://www.boohee.com/food/group/1"开始抓
                 .addUrl("https://www.boohee.com/food/group/1")
                 .addPipeline(new JsonFilePipeline("D:\\webmagic\\"))
