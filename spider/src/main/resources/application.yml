@@ -4,3 +4,7 @@ spring:
     url: jdbc:mysql://115.29.151.135:3306/bodybuild?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&useUnicode=true
     username: root
     password: abcd@1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
