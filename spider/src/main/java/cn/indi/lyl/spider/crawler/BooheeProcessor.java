@@ -1,20 +1,23 @@
-package cn.indi.lyl.spider;
+package cn.indi.lyl.spider.crawler;
 
 import cn.indi.lyl.spider.entity.Food;
 import cn.indi.lyl.spider.enumeration.UnitEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.JsonFilePipeline;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 // get data from boohee
+@Component
 public class BooheeProcessor implements PageProcessor {
     private Logger logger = LoggerFactory.getLogger(BooheeProcessor.class);
     // 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
@@ -37,20 +40,22 @@ public class BooheeProcessor implements PageProcessor {
             logger.info("fetch data,url is {}", page.getUrl());
             Food food = new Food();
             String name = page.getHtml().xpath("//h2[@class='crumb']/text()").toString();
+            name = StringUtils.isEmpty(name) ? "-" : name.trim();
             name = name.replaceAll("/","").trim();
             food.setName(name);
             String li3 = page.getHtml().xpath("//ul[@class='basic-infor']/li[3]/strong/a/text()").toString();
             if(StringUtils.isEmpty(li3)){
                 String category = page.getHtml().xpath("//ul[@class='basic-infor']/li[2]/strong/a/text()").toString();
-                food.setCategory(category.trim());
+                food.setCategory(StringUtils.isEmpty(category)? "-" : category.trim());
             }else{
                 String alias = page.getHtml().xpath("//ul[@class='basic-infor']/li[1]/text()").toString();
-                food.setAlias(alias.trim());
+                food.setAlias(StringUtils.isEmpty(alias) ? "-" : alias.trim());
                 String category = page.getHtml().xpath("//ul[@class='basic-infor']/li[3]/strong/a/text()").toString();
-                food.setCategory(category.trim());
+                food.setCategory(StringUtils.isEmpty(category)? "-" : category.trim());
             }
 
             String unit = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[1]/dd[1]/span[@class='dd']/text()").toString();
+            unit = StringUtils.isEmpty(unit) ? "-" : unit.trim();
             if(unit.contains(UnitEnum.GRAM.getValue())){
                 unit = UnitEnum.GRAM.getValue();
             }else if(unit.contains(UnitEnum.MILLILITER.getValue())){
@@ -60,15 +65,15 @@ public class BooheeProcessor implements PageProcessor {
             }
             food.setUnit(unit);
             String calorie = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[2]/dd[1]/span[@class='dd']/span[@class='stress red1']/text()").toString();
-            food.setCalorie(StringUtils.isEmpty(calorie)? null : new BigDecimal(calorie.trim()));
+            food.setCalorie(StringUtils.isEmpty(calorie)? "-" : calorie.trim());
             String carbohydrate = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[2]/dd[2]/span[@class='dd']/text()").toString();
-            food.setCarbohydrate(StringUtils.isEmpty(carbohydrate)? null : new BigDecimal(carbohydrate));
+            food.setCarbohydrate(StringUtils.isEmpty(carbohydrate)? "-" : carbohydrate.trim());
             String fat = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[3]/dd[1]/span[@class='dd']/text()").toString();
-            food.setFat(StringUtils.isEmpty(fat) ? null : new BigDecimal(fat));
+            food.setFat(StringUtils.isEmpty(fat) ? "-" : fat.trim());
             String protein = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[3]/dd[2]/span[@class='dd']/text()").toString();
-            food.setProtein(StringUtils.isEmpty(protein) ? null : new BigDecimal(protein));
+            food.setProtein(StringUtils.isEmpty(protein) ? "-" : protein.trim());
             String cellulose = page.getHtml().xpath("//div[@class='nutr-tag margin10']/div/dl[4]/dd[1]/span[@class='dd']/text()").toString();
-            food.setCellulose(StringUtils.isEmpty(cellulose) ? null : new BigDecimal(cellulose));
+            food.setCellulose(StringUtils.isEmpty(cellulose) ? "-" : cellulose.trim());
             page.putField("food", food);
 
 //            page.putField("nav", page.getHtml().xpath("//h2[@class='crumb']/text()").toString());

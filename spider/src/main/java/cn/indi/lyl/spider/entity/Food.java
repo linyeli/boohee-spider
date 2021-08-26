@@ -29,13 +29,13 @@ public class Food {
     @Column
     private String unit;
     @Column
-    private BigDecimal calorie;
+    private String calorie;
     @Column
-    private BigDecimal carbohydrate;
+    private String carbohydrate;
     @Column
-    private BigDecimal fat;
+    private String fat;
     @Column
-    private BigDecimal protein;
+    private String protein;
     @Column
-    private BigDecimal cellulose;
+    private String cellulose;
 }
